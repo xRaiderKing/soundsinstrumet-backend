@@ -36,23 +36,22 @@ conectarDB();
 
 // Configurar CORS
 // Dominios Permitidos
-const whiteList = [
-    process.env.FRONTEND_URLC
-];
 const corsOptions = {
-    origin:function(origin,callback){
-        // Comprobar en la lista blanca
-        if(!origin || whiteList.includes(origin)){
-            // Puede consultar la API
-            callback(null,true);
-        }else{
-            // No esta permitido
-            callback(new Error("Error de CORS"));
-        };
-    }
+    origin: ["https://soundsinstrument.web.app", "http://localhost:4200"], // Agrega los dominios permitidos
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true // Si usas cookies o sesiones
 };
 
 app.use(cors(corsOptions));
+
+// Middleware extra para asegurarnos de que los headers se envían correctamente
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "*"); // Para asegurarnos de permitir el origen correcto
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    next();
+});
 
 // Routing
 /* app.get('/api/usuarios',(req,res)=>{
