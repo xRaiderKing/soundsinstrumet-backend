@@ -37,7 +37,7 @@ conectarDB();
 // Configurar CORS
 // Dominios Permitidos
 const corsOptions = {
-    origin: ["https://soundsinstrument.web.app", "http://localhost:4200"], // Agrega los dominios permitidos
+    origin: ["https://soundsinstrument.web.app", "http://localhost:4200"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true // Si usas cookies o sesiones
