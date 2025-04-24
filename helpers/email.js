@@ -19,18 +19,35 @@ export const emailResgistro = async (datos) => {
   const info = await transport.sendMail({
     from: '"SoundTain-Instruments - Venta de Instrumentos Musicales" <cuentas@soundtain.com>',
     to: email,
-    subject: "SoundTain-Instruments - Confirma tu cuenta",
+    subject: "🎶 Confirma tu cuenta en SoundTain-Instruments",
     text: "Confirma tu cuenta en SoundTain-Instruments",
-    html:
-      `
-        <p>Hola, ${nombre} confirma tu cuenta en SoundTain-Instruments</p>
-        <p>Tu cuenta ya esta casi lista, solo debes comprobarla en el siguiente enlace: </p>
-        <a href="${process.env.FRONTEND_URL}:${process.env.PORTF}/auth/confirmar/${token}" >Comprobar Cuenta</a>
-        
-        <p>Si tu no creaste esta cuenta, puedes ignorar este mensaje</p>
-        `
+    html: `
+      <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+        <div style="max-width: 600px; margin: auto; background-color: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <h2 style="color: #2c3e50; text-align: center;">🎸 SoundTain-Instruments</h2>
+          <p style="font-size: 16px; color: #333;">Hola <strong>${nombre}</strong>,</p>
+          <p style="font-size: 16px; color: #333;">
+            ¡Gracias por registrarte en <strong>SoundTain-Instruments</strong>! Tu cuenta está casi lista.
+            Solo debes confirmarla haciendo clic en el botón siguiente:
+          </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.FRONTEND_URL}:${process.env.PORTF}/auth/confirmar/${token}" 
+              style="background-color: #3498db; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+              Confirmar Cuenta
+            </a>
+          </div>
+          <p style="font-size: 14px; color: #666;">
+            Si tú no creaste esta cuenta, puedes ignorar este mensaje sin problemas.
+          </p>
+          <hr style="margin: 30px 0;">
+          <p style="font-size: 12px; color: #999; text-align: center;">
+            SoundTain-Instruments | Venta de Instrumentos Musicales
+          </p>
+        </div>
+      </div>
+    `
   });
-
+  
   //console.log(datos);
 };
 
@@ -51,16 +68,37 @@ export const emailOlvidePassw = async (datos) => {
   const info = await transport.sendMail({
     from: '"SoundTain-Instruments - Venta de Instrumentos Musicales" <cuentas@soundtain.com>',
     to: email,
-    subject: "SoundTain-Instruments - Reestablecer Contraseña",
-    text: "Reestablece tu contraseña",
-    html:
-      `
-      <p>Hola, ${nombre} has solicitado reestablecer tu contraseña</p>
-      <p>Sigue el siguiente enlace para generar una nueva contraseña: </p>
-      <a href="${process.env.FRONTEND_URL}:${process.env.PORTF}/auth/nueva-pass/${token}" >Reestablecer Contraseña</a>
-      <p>Si tu no solicitaste el cambio de contraseña, puedes ignorar este mensaje</p>
-      `
+    subject: "🔒 SoundTain-Instruments - Restablecer Contraseña",
+    text: "Restablece tu contraseña",
+    html: `
+      <div style="font-family: Arial, sans-serif; background-color: #f8f8f8; padding: 20px;">
+        <div style="max-width: 600px; margin: auto; background-color: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <h2 style="color: #2c3e50; text-align: center;">🔒 Restablecimiento de Contraseña</h2>
+          <p style="font-size: 16px; color: #333;">Hola <strong>${nombre}</strong>,</p>
+          <p style="font-size: 16px; color: #333;">
+            Has solicitado restablecer tu contraseña para tu cuenta en <strong>SoundTain-Instruments</strong>.
+          </p>
+          <p style="font-size: 16px; color: #333;">
+            Para continuar, haz clic en el siguiente botón y crea una nueva contraseña:
+          </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.FRONTEND_URL}:${process.env.PORTF}/auth/nueva-pass/${token}" 
+              style="background-color: #e74c3c; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+              Restablecer Contraseña
+            </a>
+          </div>
+          <p style="font-size: 14px; color: #666;">
+            Si tú no solicitaste este cambio, puedes ignorar este mensaje. Tu cuenta está segura.
+          </p>
+          <hr style="margin: 30px 0;">
+          <p style="font-size: 12px; color: #999; text-align: center;">
+            SoundTain-Instruments | Venta de Instrumentos Musicales
+          </p>
+        </div>
+      </div>
+    `
   });
+  
 
   //console.log(datos);
 };
@@ -99,22 +137,36 @@ export const emailDetalleVenta = async (orden) => {
   const info = await transport.sendMail({
     from: '"SoundTain-Instruments - Venta de Instrumentos Musicales" <cuentas@soundtain.com>',
     to: cliente.email,
-    subject: "SoundTain-Instruments - Detalle de Venta",
-    text: "Su pago se realizó con exito, aqui encontrarás el detalle de la venta.",
-    html:
-      `
-      <p>Hola, ${cliente.nombre} has comprado los siguientes articulos:</p>
-      <p>Productos:</p>prods
-      <p>${prods}</p>
-      <p>Total:</p>
-      <pre>${total}</pre>
-      <p>Estado de pago:</p>
-      <pre>${estado}</pre>
-      <p>Fecha de compra:</p>
-      <pre>${fecha}</pre>
-
-      `
+    subject: "🧾 SoundTain-Instruments - Detalle de tu Compra",
+    text: "Su pago se realizó con éxito. Aquí encontrarás el detalle de la venta.",
+    html: `
+      <div style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+        <div style="max-width: 600px; margin: auto; background-color: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <h2 style="color: #2c3e50; text-align: center;">🎉 ¡Gracias por tu compra, ${cliente.nombre}!</h2>
+          <p style="font-size: 16px; color: #333;">Hemos recibido tu pago con éxito. Aquí tienes el detalle de tu pedido:</p>
+  
+          <h3 style="color: #e67e22;">🛒 Productos comprados:</h3>
+          <ul style="font-size: 15px; color: #333; padding-left: 20px;">
+            ${prods}
+          </ul>
+  
+          <h3 style="color: #2980b9;">💰 Total:</h3>
+          <p style="font-size: 16px; font-weight: bold; color: #27ae60;">${total}</p>
+  
+          <h3 style="color: #2980b9;">📌 Estado de Pago:</h3>
+          <p style="font-size: 15px; color: #333;">${estado}</p>
+  
+          <h3 style="color: #2980b9;">🗓️ Fecha de Compra:</h3>
+          <p style="font-size: 15px; color: #333;">${fecha}</p>
+  
+          <hr style="margin: 30px 0;">
+          <p style="font-size: 14px; color: #666;">Este correo es tu comprobante de compra. Si tienes alguna duda, contáctanos a <a href="mailto:cuentas@soundtain.com">cuentas@soundtain.com</a>.</p>
+          <p style="font-size: 12px; color: #999; text-align: center;">SoundTain-Instruments | Venta de Instrumentos Musicales</p>
+        </div>
+      </div>
+    `
   });
+  
 
 };
 
