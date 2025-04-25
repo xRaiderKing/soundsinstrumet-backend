@@ -7,11 +7,10 @@ export const emailResgistro = async (datos) => {
 
   // configurar cliente para enviar email
   let transport = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      user: "jesusyaelpadrongrimaldo@gmail.com",
+      pass: "feno iusi niqs pnca"
     }
   });
 
@@ -56,11 +55,10 @@ export const emailOlvidePassw = async (datos) => {
 
   // configurar cliente para enviar email
   let transport = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      user: "jesusyaelpadrongrimaldo@gmail.com",
+      pass: "feno iusi niqs pnca"
     }
   });
 
@@ -108,11 +106,10 @@ export const emailDetalleVenta = async (orden) => {
   const { productos, estado, total, cliente } = orden;
 
   let transport = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      user: "jesusyaelpadrongrimaldo@gmail.com",
+      pass: "feno iusi niqs pnca"
     }
   });
 
@@ -175,11 +172,10 @@ export const emailDescuento = async (datos) => {
 
   // configurar cliente para enviar email
   let transport = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      user: "jesusyaelpadrongrimaldo@gmail.com",
+      pass: "feno iusi niqs pnca"
     }
   });
 
