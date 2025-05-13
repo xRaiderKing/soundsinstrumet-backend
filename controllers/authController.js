@@ -82,11 +82,36 @@ const login = async (req, res, next) => {
 
         // Configurar el correo electrónico
         const mailOptions = {
-            from: 'SoundTain-Instruments - Venta de Instrumentos Musicales" <cuentas@soundtain.com>',
+            from: '"SoundTain-Instruments - Venta de Instrumentos Musicales" <cuentas@soundtain.com>',
             to: email,
-            subject: 'Tu código de verificación',
-            text: `Tu código de verificación es: ${verificationCode}`
-        };
+            subject: '📩 Tu código de verificación - SoundTain-Instruments',
+            text: `Tu código de verificación es: ${verificationCode}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                <div style="max-width: 600px; margin: auto; background-color: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                  <h2 style="color: #2c3e50; text-align: center;">🔐 Código de Verificación</h2>
+                  <p style="font-size: 16px; color: #333;">Hola,</p>
+                  <p style="font-size: 16px; color: #333;">
+                    Hemos recibido una solicitud para verificar tu cuenta en <strong>SoundTain-Instruments</strong>.
+                  </p>
+                  <p style="font-size: 16px; color: #333;">Tu código de verificación es:</p>
+                  <div style="text-align: center; margin: 30px 0;">
+                    <span style="display: inline-block; background-color: #3498db; color: white; padding: 15px 25px; font-size: 20px; border-radius: 8px; letter-spacing: 2px;">
+                      ${verificationCode}
+                    </span>
+                  </div>
+                  <p style="font-size: 14px; color: #666;">
+                    Si tú no solicitaste este código, puedes ignorar este mensaje. Tu cuenta está segura.
+                  </p>
+                  <hr style="margin: 30px 0;">
+                  <p style="font-size: 12px; color: #999; text-align: center;">
+                    SoundTain-Instruments | Venta de Instrumentos Musicales
+                  </p>
+                </div>
+              </div>
+            `
+          };
+          
 
         // Enviar correo de forma asíncrona
         await transporter.sendMail(mailOptions);
