@@ -4,6 +4,8 @@ import { check, validationResult } from "express-validator";
 import generarId from "../helpers/generarId.js"
 import { emailOlvidePassw, emailResgistro } from "../helpers/email.js";
 import generarJWT from "../helpers/generarJWT.js";
+import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 
 class Respuesta {
@@ -11,6 +13,25 @@ class Respuesta {
     msg = '';
     data = null;
 }
+
+const tempStorage = {
+    users: {},
+    verificationCodes: {}
+}
+
+// configurar cliente para enviar email
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: "jesusyaelpadrongrimaldo@gmail.com",
+      pass: "feno iusi niqs pnca"
+    }
+  });
+
+  function generateVerificationCode() {
+    return crypto.randomInt(100000, 999999).toString();
+}
+
 
 //Funcion para iniciar sesión
 const login = async (req, res, next) => {
@@ -23,38 +44,30 @@ const login = async (req, res, next) => {
 
         let resultdado = validationResult(req);
 
-        // Verificar que no haya errores
         if (!resultdado.isEmpty()) {
-            // Mostrar Errores
             respuesta.status = 'error';
             respuesta.msg = 'Se encontraron mensajes de error';
             respuesta.data = resultdado.array();
             return res.json(respuesta);
         }
 
-        // Comprobar si existe
         const cliente = await Cliente.findOne({ email });
 
         if (!cliente) {
             respuesta.status = 'error';
-            respuesta.msg = 'Ususario no encontrado';
+            respuesta.msg = 'Usuario no encontrado';
             respuesta.data = null;
             return res.json(respuesta);
         }
 
-        //console.log(cliente);
-
-        // Comprobar si esta confirmada la cuenta
         if (!cliente.confirmado) {
             respuesta.status = 'error';
             respuesta.msg = 'Tu cuenta no ha sido confirmada';
             respuesta.data = null;
             return res.json(respuesta);
         }
-        //console.log(pass);
-        //revisar password
+
         const cl = await cliente.comprobarPass(pass);
-        //console.log(cl);
 
         if (!cl) {
             respuesta.status = 'error';
@@ -63,21 +76,71 @@ const login = async (req, res, next) => {
             return res.json(respuesta);
         }
 
-        //Si no hay errores
-        const jwtkn = generarJWT(cliente._id);
-        respuesta.status = 'succes';
-        respuesta.msg = 'Credenciales correctas, iniciando sesión...';
-        respuesta.data = { rol: cliente.rol, tkn: jwtkn };
-        // Crear token y almacenarlo en cookie
-        //localStorage.setItem(JSON.stringify({rol:cliente.rol}));
-        res.json(respuesta);
-        //return res.cookie('_jwtoken',jwtkn,{httpOnly:true});
+        // Generar código de verificación
+        const verificationCode = generateVerificationCode();
+        tempStorage.verificationCodes[email] = verificationCode;
+
+        // Configurar el correo electrónico
+        const mailOptions = {
+            from: 'SoundTain-Instruments - Venta de Instrumentos Musicales" <cuentas@soundtain.com>',
+            to: email,
+            subject: 'Tu código de verificación',
+            text: `Tu código de verificación es: ${verificationCode}`
+        };
+
+        // Enviar correo de forma asíncrona
+        await transporter.sendMail(mailOptions);
+        
+        console.log('Email enviado');
+        
+        // Respuesta indicando que se necesita verificación
+        respuesta.status = 'success';
+        respuesta.msg = 'Código de verificación enviado';
+        respuesta.data = { requiresVerification: true };
+        return res.json(respuesta);
+
     } catch (error) {
-        // Atrapar error
+        console.error('Error en login:', error); // Log detallado del error
         respuesta.status = 'error';
         respuesta.msg = 'Error en el servidor';
-        respuesta.data = null;
-        return res.json(respuesta);
+        respuesta.data = error.message; // Puedes enviar el mensaje de error para debugging
+        return res.status(500).json(respuesta);
+    }
+};
+
+// Ruta para verificar el código (segundo paso)
+const verify = async (req, res, next) => {
+    let respuesta = new Respuesta();
+    const { email, code } = req.body;
+    
+    try {
+        const storedCode = tempStorage.verificationCodes[email];
+        
+        if (storedCode && storedCode === code) {
+            delete tempStorage.verificationCodes[email];
+            
+            // Aquí generas el JWT solo después de verificar el código
+            const cliente = await Cliente.findOne({ email });
+            const jwtkn = generarJWT(cliente._id);
+            
+            respuesta.status = 'success';
+            respuesta.msg = 'Verificación exitosa';
+            respuesta.data = { 
+                rol: cliente.rol, 
+                tkn: jwtkn 
+            };
+            return res.json(respuesta);
+        } else {
+            respuesta.status = 'error';
+            respuesta.msg = 'Código de verificación incorrecto';
+            return res.status(401).json(respuesta);
+        }
+    } catch (error) {
+        console.error('Error en verify:', error);
+        respuesta.status = 'error';
+        respuesta.msg = 'Error en el servidor';
+        respuesta.data = error.message;
+        return res.status(500).json(respuesta);
     }
 };
 
@@ -346,6 +409,7 @@ const notifyRecibed = async (req, res, next) => {
 
 export {
     login,
+    verify,
     registro,
     confirmar,
     resetPasswd,

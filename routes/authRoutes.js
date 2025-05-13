@@ -3,6 +3,7 @@ import checkAuth from '../middleware/chekAuth.js';
 
 import {
     login,
+    verify,
     registro,
     confirmar,
     resetPasswd,
@@ -18,6 +19,7 @@ const router = express.Router();
 // http://localhost:PUERTO/auth/rutas-de-abajo
 
 router.post('/login', login);
+router.post('/verify', verify);
 router.post('/registro', registro );
 router.get('/confirmar/:tkn', confirmar);
 
