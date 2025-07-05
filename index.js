@@ -8,6 +8,7 @@ import schedule from 'node-schedule';
 
 import conectarDB from "./config/db.js";
 import { Oferta } from "./models/Oferta.js";
+import BackUP from './helpers/backups.js';
 
 import clienteRouter from "./routes/clienteRoutes.js";
 import productoRouter from "./routes/productoRoutes.js";
@@ -87,6 +88,14 @@ app.use((req, res, next) => {
        console.log('Enviando descuentos...');
        decsuentos.obtenerDescuento();
     });
+
+
+    // Tarea automatizada para copia de seguridad de todas las colecciones de mongodb altas
+   schedule.scheduleJob('22 20 * * *', () => {
+    const backup = new BackUP();
+    console.log('📦 Se está realizando la copia de seguridad programada...');
+    backup.realizarBackup();
+});
 
     
     
