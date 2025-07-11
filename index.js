@@ -99,14 +99,6 @@ app.use((req, res, next) => {
 });
 
 
-    // Tarea automatizada para copia de seguridad de todas las colecciones de mongodb altas
-   schedule.scheduleJob('22 20 * * *', () => {
-    const backup = new BackUP();
-    console.log('📦 Se está realizando la copia de seguridad programada...');
-    backup.realizarBackup();
-});
-
-
     // Programa para eliminar datos de clientes inactivos
     schedule.scheduleJob('11 18 * * *', () => {
         console.log('Eliminación de datos de clientes inactivos');
