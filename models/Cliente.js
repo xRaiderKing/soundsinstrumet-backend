@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { emailDescuento } from "../helpers/email.js";
+
+let fechaAct = new Date();
 //schema
 const clienteSchema = mongoose.Schema(
     {
@@ -16,7 +18,8 @@ const clienteSchema = mongoose.Schema(
         descuento: {
             checkNotify: { type: Boolean, default: false },
             descuento: { type:Number, default:0 }
-        }
+        },
+        ultimaAct : {type: Date, default: fechaAct.toISOString}
     }, 
     {
         timestamps:true //genera columnas de creado y actualizado
@@ -76,6 +79,13 @@ clienteSchema.methods.eliminarDescuento = async function() {
     await this.save(); // Guardar los cambios en la base de datos
     console.log(`checkNotify actualizado a true para el cliente: ${this.email}`);
 };
+
+// Actualizar ultima actividad de usuarios
+clienteSchema.methods.actualizarUltimaActividad = async function () {
+    this.ultimaAct = fechaAct.toISOString();
+    await this.save();
+    console.info("Ultima actividad de cliente actualizada!")
+}
 
 // convertir el esquema a modelo para poderlo trabajar
 const Cliente = mongoose.model("Cliente",clienteSchema);

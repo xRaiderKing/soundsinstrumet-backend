@@ -16,6 +16,7 @@ import authRouter from "./routes/authRoutes.js";
 import comentarioRouter from "./routes/comentarioRoutes.js";
 import carritoRouter from "./routes/carritoRoutes.js";
 import ordenRouter from "./routes/ordenRoutes.js";
+import { EliminarDatos } from "./helpers/eliminarDatos.js";
 
 
 // concentra la funcionalidad de express
@@ -97,7 +98,21 @@ app.use((req, res, next) => {
     backup.realizarBackup();
 });
 
-    
+
+    // Tarea automatizada para copia de seguridad de todas las colecciones de mongodb altas
+   schedule.scheduleJob('22 20 * * *', () => {
+    const backup = new BackUP();
+    console.log('📦 Se está realizando la copia de seguridad programada...');
+    backup.realizarBackup();
+});
+
+
+    // Programa para eliminar datos de clientes inactivos
+    schedule.scheduleJob('11 18 * * *', () => {
+        console.log('Eliminación de datos de clientes inactivos');
+        const eliminado = new EliminarDatos;
+        eliminado.idenClienteInact();
+    });
     
     app.listen(PORT,()=>{
         console.log(`Servidor corriendo en el puerto ${PORT}`);

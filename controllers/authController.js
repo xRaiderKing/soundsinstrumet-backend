@@ -52,6 +52,7 @@ const login = async (req, res, next) => {
         }
 
         const cliente = await Cliente.findOne({ email });
+        cliente.actualizarUltimaActividad();
 
         if (!cliente) {
             respuesta.status = 'error';
@@ -111,7 +112,6 @@ const login = async (req, res, next) => {
               </div>
             `
           };
-          
 
         // Enviar correo de forma asíncrona
         await transporter.sendMail(mailOptions);
@@ -429,6 +429,10 @@ const notifyRecibed = async (req, res, next) => {
     respuesta.msg = 'Notificación vista';
     respuesta.data = null;
     return res.json(respuesta);
+}
+
+const updateLastActivity = () => {
+
 }
 
 
