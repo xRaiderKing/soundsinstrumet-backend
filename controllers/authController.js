@@ -6,6 +6,7 @@ import { emailOlvidePassw, emailResgistro } from "../helpers/email.js";
 import generarJWT from "../helpers/generarJWT.js";
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import sanitize from 'mongo-sanitize';
 
 
 class Respuesta {
@@ -36,7 +37,7 @@ const tempStorage = {
 //Funcion para iniciar sesión
 const login = async (req, res, next) => {
     let respuesta = new Respuesta();
-    const { email, pass } = req.body;
+    const { email, pass } = sanitize(req.body);
 
     try {
         await check('email').notEmpty().withMessage('Email Obligatorio').run(req);
