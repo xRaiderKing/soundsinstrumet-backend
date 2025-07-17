@@ -17,11 +17,19 @@ import comentarioRouter from "./routes/comentarioRoutes.js";
 import carritoRouter from "./routes/carritoRoutes.js";
 import ordenRouter from "./routes/ordenRoutes.js";
 import { EliminarDatos } from "./helpers/eliminarDatos.js";
+import helmet from 'helmet';
 
 
 // concentra la funcionalidad de express
 const app = express();
 app.use(express.json()); // para que procese informacion json correctamente
+
+// Desactiva el header 'X-Powered-By: Express'
+app.disable('x-powered-by');
+
+
+// Aplica headers de seguridad
+app.use(helmet());
 
 // Habilitar cookie
 app.use(cookieParser());
