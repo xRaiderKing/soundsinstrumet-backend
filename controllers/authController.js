@@ -20,6 +20,10 @@ const tempStorage = {
     verificationCodes: {}
 }
 
+
+const MAX_INTENTOS = 5;
+const BLOQUEO_MINUTOS = 10;
+
 // configurar cliente para enviar email
   let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -69,14 +73,36 @@ const login = async (req, res, next) => {
             return res.json(respuesta);
         }
 
+        // Verificar si está bloqueado
+        if (cliente.bloqueadoHasta && cliente.bloqueadoHasta > new Date()) {
+            respuesta.status = 'error';
+            respuesta.msg = 'Cuenta bloqueada temporalmente. Intenta más tarde.';
+            return res.status(403).json(respuesta);
+        }
+
         const cl = await cliente.comprobarPass(pass);
 
         if (!cl) {
+            cliente.intentosFallidos += 1;
+
+            if (cliente.intentosFallidos >= MAX_INTENTOS) {
+                cliente.bloqueadoHasta = new Date(Date.now() + BLOQUEO_MINUTOS * 60000);
+                await cliente.save();
+                respuesta.status = 'error';
+                respuesta.msg = `Demasiados intentos fallidos. Cuenta bloqueada por ${BLOQUEO_MINUTOS} minutos.`;
+                return res.status(403).json(respuesta);
+            }
+
             respuesta.status = 'error';
             respuesta.msg = 'Contraseña incorrecta';
             respuesta.data = null;
             return res.json(respuesta);
         }
+
+        // Si el login fue exitoso: resetear contador
+        cliente.intentosFallidos = 0;
+        cliente.bloqueadoHasta = null;
+        await cliente.save();
 
         // Generar código de verificación
         const verificationCode = generateVerificationCode();
