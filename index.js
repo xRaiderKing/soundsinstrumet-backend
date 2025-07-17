@@ -24,11 +24,11 @@ const app = express();
 app.use(express.json()); // para que procese informacion json correctamente
 
 // Desactiva el header 'X-Powered-By: Express'
-app.disable('x-powered-by');
+//app.disable('x-powered-by');
 
 
 // Aplica headers de seguridad
-app.use(helmet());
+//app.use(helmet());
 
 // Habilitar cookie
 app.use(cookieParser());
