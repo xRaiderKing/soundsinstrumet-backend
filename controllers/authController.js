@@ -47,7 +47,7 @@ const login = async (req, res, next) => {
         await check('email').notEmpty().withMessage('Email Obligatorio').run(req);
         await check('pass').notEmpty().withMessage('Password Obligatorio').run(req);
 
-        let resultdado = validationResult(req);
+        let resultdado = validationResult(req.body);
 
         if (!resultdado.isEmpty()) {
             respuesta.status = 'error';
@@ -102,7 +102,7 @@ const login = async (req, res, next) => {
         // Si el login fue exitoso: resetear contador
         cliente.intentosFallidos = 0;
         cliente.bloqueadoHasta = null;
-        await cliente.save();
+        //await cliente.save();
 
         // Generar código de verificación
         const verificationCode = generateVerificationCode();
