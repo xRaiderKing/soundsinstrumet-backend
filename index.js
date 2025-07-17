@@ -1,7 +1,6 @@
 import  express, { json }  from "express";
 import dotenv from 'dotenv';
 import cors from "cors"; // permitir coneiones desde el domini del front
-import csrf from "csurf";
 import cookieParser from "cookie-parser";
 import schedule from 'node-schedule';
 
