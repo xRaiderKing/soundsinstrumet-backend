@@ -19,6 +19,14 @@ const clienteSchema = mongoose.Schema(
             checkNotify: { type: Boolean, default: false },
             descuento: { type:Number, default:0 }
         },
+         intentosFallidos: {
+            type: Number,
+            default: 0,
+        },
+        bloqueadoHasta: {
+            type: Date,
+            default: null,
+        },
         ultimaAct : {type: Date, default: fechaAct.toISOString}
     }, 
     {
